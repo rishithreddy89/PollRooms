@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { createPoll, getPollById } from '../services/pollService';
+import { createPoll, getAllPolls, getPollById } from '../services/pollService';
 import { createPollSchema } from '../validators/pollValidators';
 
 export const createPollController = async (
@@ -16,6 +16,19 @@ export const createPollController = async (
       return res.status(400).json({ error: 'Validation error', details: error.errors });
     }
     next(error);
+  }
+};
+
+export const getAllPollsController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const polls = await getAllPolls();
+    res.json(polls);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch polls' });
   }
 };
 

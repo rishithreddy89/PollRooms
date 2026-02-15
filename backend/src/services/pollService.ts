@@ -34,6 +34,21 @@ export const createPoll = async (data: CreatePollData) => {
   return { ...poll, creatorToken };
 };
 
+export const getAllPolls = async () => {
+  const polls = await prisma.poll.findMany({
+    include: {
+      options: {
+        orderBy: { text: 'asc' }
+      }
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+
+  return polls;
+};
+
 export const getPollById = async (pollId: string) => {
   const poll = await prisma.poll.findUnique({
     where: { id: pollId },
