@@ -1,0 +1,21 @@
+# PollRooms Project Structure
+
+## Backend
+- Express + TypeScript + Socket.io + Prisma + MySQL
+- Clean architecture: routes → controllers → services
+- Real-time updates via WebSocket rooms
+- IP-based voting restriction with database constraints
+
+## Frontend
+- Next.js 14 (App Router) + TypeScript + Tailwind CSS
+- Socket.io client for real-time updates
+- Modern, professional UI with animations
+- localStorage + server-side vote tracking
+
+## Setup
+1. Backend: `cd backend && npm install && npm run dev`
+2. Frontend: `cd frontend && npm install && npm run dev`
+3. Configure `.env` files in both directories (see examples)
+4. Setup MySQL database and run Prisma migrations
+
+See README.md for detailed instructions.
