@@ -15,21 +15,35 @@ const app = express();
 const server = createServer(app);
 
 const PORT = Number(process.env.PORT) || 4000;
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 if (!process.env.DATABASE_URL) {
   console.warn('WARNING: DATABASE_URL not set');
 }
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://poll-rooms-4dwo4f096-rishith-reddys-projects.vercel.app'
+];
+
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
+app.options('*', cors());
+
 app.use(express.json());
 
-initSocket(server, FRONTEND_URL);
+const allowedSocketOrigins = allowedOrigins;
+
+initSocket(server, allowedSocketOrigins);
 
 app.use('/api/polls', pollRoutes);
 app.use('/api/polls', voteRoutes);
