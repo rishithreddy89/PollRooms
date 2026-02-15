@@ -14,12 +14,12 @@ dotenv.config();
 const app = express();
 const server = createServer(app);
 
-const PORT = process.env.PORT || 4000;
+const PORT = Number(process.env.PORT) || 4000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is required');
+  console.warn('WARNING: DATABASE_URL not set');
 }
 
 app.use(cors({
@@ -36,16 +36,18 @@ app.use('/api/polls', voteRoutes);
 app.use('/api/polls', statsRoutes);
 app.use('/api/creator', creatorRoutes);
 
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', env: NODE_ENV });
+  res.status(200).json({ status: 'ok', env: NODE_ENV });
 });
 
 app.use(errorHandler);
 
-const instance = server.listen(PORT, () => {
-  if (NODE_ENV === 'development') {
-    console.log(`Server running on port ${PORT}`);
-  }
+const instance = server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 const gracefulShutdown = () => {
