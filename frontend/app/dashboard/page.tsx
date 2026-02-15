@@ -15,14 +15,15 @@ export default function DashboardPage() {
   useEffect(() => {
     const loadPolls = async () => {
       try {
-        const tokens = JSON.parse(localStorage.getItem('creatorTokens') || '[]');
+        const stored = localStorage.getItem('creatorTokens');
+        const tokens: string[] = stored ? JSON.parse(stored) : [];
         
         if (tokens.length === 0) {
           setLoading(false);
           return;
         }
 
-        const uniqueTokens = [...new Set(tokens.map((t: any) => t.token))];
+        const uniqueTokens = new Set<string>(tokens.map((t: any) => t.token));
         const allPolls: Poll[] = [];
 
         for (const token of uniqueTokens) {
