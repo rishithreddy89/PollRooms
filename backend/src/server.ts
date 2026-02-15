@@ -25,15 +25,17 @@ if (!process.env.DATABASE_URL) {
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://poll-rooms-4dwo4f096-rishith-reddys-projects.vercel.app'
+  'https://poll-rooms-4dwo4f096-rishith-reddys-projects.vercel.app',
+  'https://poll-rooms-xi.vercel.app'
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, false);
     }
   },
   credentials: true
