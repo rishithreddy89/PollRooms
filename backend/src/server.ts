@@ -14,8 +14,10 @@ dotenv.config();
 const app = express();
 const server = createServer(app);
 
-const PORT = Number(process.env.PORT) || 4000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 4000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
+
+console.log(`Starting server on port ${PORT} in ${NODE_ENV} mode`);
 
 if (!process.env.DATABASE_URL) {
   console.warn('WARNING: DATABASE_URL not set');
@@ -61,7 +63,9 @@ app.get('/health', (req, res) => {
 app.use(errorHandler);
 
 const instance = server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✓ Server successfully started on port ${PORT}`);
+  console.log(`✓ Listening on 0.0.0.0:${PORT}`);
+  console.log(`✓ Health check available at /health`);
 });
 
 const gracefulShutdown = () => {
