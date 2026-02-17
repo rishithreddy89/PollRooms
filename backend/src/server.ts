@@ -26,20 +26,28 @@ if (!process.env.DATABASE_URL) {
 const allowedOrigins = [
   'http://localhost:3000',
   'https://poll-rooms-doga55bpt-rishith-reddys-projects.vercel.app',
-  'https://poll-rooms-4dwo4f096-rishith-reddys-projects.vercel.app'
+  'https://poll-rooms-4dwo4f096-rishith-reddys-projects.vercel.app',
+  'https://poll-rooms-chqjjdqoj-rishith-reddys-projects.vercel.app',
+  'https://poll-rooms.vercel.app',
+  'https://pollrooms.vercel.app'
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, origin);
+    // Check if origin matches allowed origins or is a Vercel preview deployment
+    if (allowedOrigins.includes(origin) || origin.includes('.vercel.app')) {
+      return callback(null, true);
     }
 
-    return callback(null, false);
+    console.log('Blocked origin:', origin);
+    return callback(new Error('Not allowed by CORS'));
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.options('*', cors({
